@@ -21,6 +21,7 @@ const PostList = () => {
         style={{ width: "30%", marginBottom: "20px" }}
       >
         <div className="card-body">
+          <h6>{post.id}</h6>
           <h3>{post.title}</h3>
         </div>
         <CommentList postId={post.id} />
