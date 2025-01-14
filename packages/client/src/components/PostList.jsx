@@ -1,16 +1,20 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CreateComment from "./CommentCreate";
 import CommentList from "./CommentList";
 
 const PostList = () => {
   const [posts, setPosts] = useState({});
+  const hasFetch = useRef(false);
   const fetchPosts = async () => {
-    const res = await axios.get("http://localhost:4000/posts");
+    const res = await axios.get("http://localhost:4002/posts");
     setPosts(res.data);
   };
   useEffect(() => {
-    fetchPosts();
+    if (!hasFetch.current) {
+      fetchPosts();
+      hasFetch.current = true;
+    }
   }, []);
 
   const renderPost = Object.values(posts).map((post) => {
@@ -21,10 +25,9 @@ const PostList = () => {
         style={{ width: "30%", marginBottom: "20px" }}
       >
         <div className="card-body">
-          <h6>{post.id}</h6>
           <h3>{post.title}</h3>
         </div>
-        <CommentList postId={post.id} />
+        <CommentList comments={post.comments} />
         <CreateComment postId={post.id} />
       </div>
     );
